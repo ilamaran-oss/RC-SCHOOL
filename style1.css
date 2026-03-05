@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  src: url('../fonts/MaterialSymbolsOutlined.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+.wrapper {
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  height:100vh;
+  width:100%;
+
+  background-image:
+    linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+    url("enhanced-4K-image.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-box {
+  position: relative;
+  width: 407px;
+  height: 455px;
+  background: transparent;
+  border-radius: 10px;
+  border: 2px solid rgb(246, 241, 241);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  box-shadow: 0 0 10px rgba(189, 186, 186, 0.305);
+  backdrop-filter: blur(5px);
+}
+h2 {
+  text-shadow: 2px 2px 3px black;
+  font-size:2em;
+  color:#fff;
+  text-align:center;
+}
+.input-box {
+  position:relative;
+  width:310px;
+  margin:30px 0;
+  border-bottom:1px solid #fff;
+}
+.input-box label {
+  text-shadow: 2px 2px 3px black;
+  position:absolute;
+  top:50%;
+  left:5px;
+  transform:translateY(-50%);
+  font-size:1em;
+  color:#fff;
+  pointer-events:none;
+  transition:.5s;
+}
+.input-box input:focus  ~ label,
+.input-box input:not(:placeholder-shown)  ~ label {
+  top:-5px;
+  font-size: 0.8em;
+  color: #fff;
+}
+.input-box input {
+  width:100%;
+  height:50px;
+  background:transparent;
+  border:none;
+  outline:none;
+  font-size:1em;
+  color:#fff;
+  padding:0 35px 0 5px;
+}
+/* Left icon */
+.input-box .icon {
+  position: absolute;
+  left: auto;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  color: #fff;
+  filter: drop-shadow(6px 2px 4px rgba(236, 233, 233, 0.6));
+}
+
+/* Password toggle icon on the right */
+.input-box .toggle-password {
+  position: absolute;
+  left: auto;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 22px;
+  color: #fff;
+  pointer-events: auto;
+  transition: 0.3s ease;
+  z-index: 2;
+}
+
+
+
+/* Input padding */
+.input-box input[type="password"] {
+  padding-left: 5px;  /* space for left icon */
+  padding-right: 5px; /* space for right toggle icon */
+}
+
+
+button {
+  width:100%;
+  height:40px;
+  background-color:#fff;
+  border:none;
+  border-radius:40px;
+  cursor:pointer;
+  font-size:1em;
+  color:#000;
+  font-weight:500;
+}
+
+.register-link {
+  font-size:.9em;
+  color:#fff;
+  text-align:center;
+  margin:25px 0 10px;
+}
+
+.register-link p{
+  text-shadow: 2px 2px 3px black;
+}
+.register-link p a {
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+}
+.register-link p a:hover {
+  text-decoration:underline;
+}
+@media (max-width:500px) {
+  .login-box {
+    width:100%;
+    height:100vh;
+    border:none;
+    border-radius:0;
+  }
+  .input-box {
+    width:290px;
+  }
+}
+
+/*SIGN UP PAGE*/
+.signup-page .login-box{
+  text-shadow: 0px 2px 2px black;
+  height: 500px;
+  width: 420px;
+  padding: 40px 3px;
+}
+
+.change-pass-box {
+  height: 520px;
+}
