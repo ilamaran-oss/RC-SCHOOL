@@ -64,7 +64,7 @@ header {
   height: 50px;
   border-radius: 50%;
   background: white;
-  border: 2px solid white;
+  border: 2px solid rgb(178, 174, 174);
   padding: 5px;
   box-shadow: 0 0 15px white;
   transition: .3s;
@@ -1000,4 +1000,52 @@ footer {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Fix for Dashboard Dynamic Content */
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.schedule-wrapper {
+  overflow-x: auto;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* Schedule Section Styles */
+.schedule-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+  min-width: 600px;
+}
+
+.schedule-wrapper th,
+.schedule-wrapper td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.schedule-wrapper th {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.schedule-wrapper td:first-child {
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.schedule-wrapper h3,
+.schedule-title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 10px;
+  color: #ffd700;
+  font-size: 1.5rem;
 }

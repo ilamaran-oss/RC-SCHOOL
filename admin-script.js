@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const createUserForm = document.getElementById('createUserForm');
     const addAboutBtn = document.getElementById('addAboutBtn');
     const addEventBtn = document.getElementById('addEventBtn');
+    const editUserModal = document.getElementById('editUserModal');
+    const editUserForm = document.getElementById('editUserForm');
     const studentDataModal = document.getElementById('studentDataModal');
     const studentDataForm = document.getElementById('studentDataForm');
     let studentEditor;
@@ -23,7 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize CKEditor
     if (document.querySelector('#studentContent')) {
         ClassicEditor
-            .create(document.querySelector('#studentContent'))
+            .create(document.querySelector('#studentContent'), {
+                toolbar: [
+                    'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                    'outdent', 'indent', '|', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
+                    'horizontalLine', '|', 'undo', 'redo'
+                ]
+            })
             .then(editor => {
                 studentEditor = editor;
             })
@@ -92,6 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
             eventForm.reset();
             document.getElementById('eventId').value = '';
             document.getElementById('eventModalTitle').textContent = 'Add Event';
+        } else if (modalId === 'editUserModal') {
+            editUserForm.reset();
+            document.getElementById('editUserId').value = '';
+            document.getElementById('currentUserProfilePic').innerHTML = '';
         } else if (modalId === 'studentDataModal') {
             studentDataForm.reset();
             document.getElementById('studentContent').value = '';
@@ -102,14 +114,14 @@ document.addEventListener('DOMContentLoaded', function() {
     addAboutBtn.addEventListener('click', () => openModal('aboutModal'));
     addEventBtn.addEventListener('click', () => openModal('eventModal'));
 
-    modalCloses.forEach(close => {
+    document.querySelectorAll('.modal-close').forEach(close => {
         close.addEventListener('click', function() {
             const modalId = this.getAttribute('data-modal');
             closeModal(modalId);
         });
     });
 
-    [aboutModal, eventModal, studentDataModal].forEach(modal => {
+    [aboutModal, eventModal, studentDataModal, editUserModal].forEach(modal => {
         if (modal) {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
@@ -201,6 +213,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         }
 
+        // Edit User
+        if (e.target.classList.contains('edit-user-btn')) {
+            const userId = e.target.getAttribute('data-id');
+            fetch(`get_user.php?id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showNotification(data.error, 'error');
+                        return;
+                    }
+                    document.getElementById('editUserId').value = data.id;
+                    document.getElementById('editUserName').value = data.name;
+                    document.getElementById('editUserUsername').value = data.username;
+                    document.getElementById('editUserRole').value = data.role;
+                    
+                    const profilePicDiv = document.getElementById('currentUserProfilePic');
+                    if (data.profile_pic) {
+                        profilePicDiv.innerHTML = `Current: <img src="uploads/${data.profile_pic}" width="50" style="vertical-align: middle; border-radius: 50%;">`;
+                    } else {
+                        profilePicDiv.innerHTML = 'Current: No photo';
+                    }
+
+                    document.getElementById('editUserModalTitle').textContent = 'Edit ' + data.name;
+                    openModal('editUserModal');
+                })
+                .catch(err => showNotification('Could not fetch user data.', 'error'));
+        }
+
         // Delete About Card
         if (e.target.classList.contains('delete-btn') && confirm('Are you sure you want to delete this item?')) {
             const id = e.target.getAttribute('data-id');
@@ -277,6 +317,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitBtn.textContent = 'Save Data';
                     submitBtn.disabled = false;
                 }
+            });
+        });
+    }
+
+    // Edit User Form Submission
+    if (editUserForm) {
+        editUserForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('update_user.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(data.message, 'success');
+                    closeModal('editUserModal');
+                    setTimeout(() => location.reload(), 1000); 
+                } else {
+                    showNotification(data.message || 'Error updating user', 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('An unexpected error occurred', 'error');
             });
         });
     }

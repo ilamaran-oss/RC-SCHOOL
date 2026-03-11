@@ -23,8 +23,8 @@
             <input type="text" name="username"
               required
               placeholder=" "
-              pattern="^(RCS|RCT)[0-9]{7,}$"
-              title="Enter RCS[ID] for students or RCT[ID] for teachers">
+              pattern="^(RCS|RCT|RCP)[0-9]{7,}$"
+              title="Enter RCS[ID] for students, RCT[ID] for teachers, or RCP[ID] for principals">
             <label>Username</label>
           </div>
 

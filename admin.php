@@ -13,6 +13,7 @@ $about_count = $conn->query("SELECT COUNT(*) as c FROM about_cards")->fetch_asso
 $events_count = $conn->query("SELECT COUNT(*) as c FROM events")->fetch_assoc()['c'];
 $admissions_count = $conn->query("SELECT COUNT(*) as c FROM admissions")->fetch_assoc()['c'];
 $students_count = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='student'")->fetch_assoc()['c'];
+$teachers_count = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='teacher'")->fetch_assoc()['c'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,6 +45,10 @@ $students_count = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='stud
                 <li><a href="#" class="menu-item" data-page="students">
                         <span class="material-symbols-outlined">groups</span>
                         Students
+                    </a></li>
+                <li><a href="#" class="menu-item" data-page="teachers">
+                        <span class="material-symbols-outlined">person_4</span>
+                        Teachers
                     </a></li>
                 <li><a href="#" class="menu-item" data-page="about">
                         <span class="material-symbols-outlined">info</span>
@@ -128,6 +133,15 @@ $students_count = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='stud
                                 <p>Students</p>
                             </div>
                         </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <span class="material-symbols-outlined">person_4</span>
+                            </div>
+                            <div class="stat-content">
+                                <h3><?php echo $teachers_count; ?></h3>
+                                <p>Teachers</p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="recent-activity">
@@ -175,11 +189,55 @@ $students_count = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='stud
                                             <td>" . htmlspecialchars($stu['name']) . "</td>
                                             <td>" . htmlspecialchars($stu['username']) . "</td>
                                             <td>" . htmlspecialchars($stu['role']) . "</td>
-                                            <td><button class='btn-secondary manage-student-btn' data-username='" . $stu['username'] . "'>Manage Data</button></td>
+                                            <td>
+                                                <button class='btn-secondary manage-student-btn' data-username='" . $stu['username'] . "'>Manage Data</button>
+                                                <button class='btn-secondary edit-user-btn' data-id='" . $stu['id'] . "'>Edit</button>
+                                            </td>
                                         </tr>";
                                     }
                                 } else {
                                     echo "<tr><td colspan='4'>No students found.</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Teachers Page -->
+                <div class="page hidden" id="teachersPage">
+                    <div class="page-header">
+                        <h2>Manage Teachers & Principles</h2>
+                    </div>
+                    <div class="admissions-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $teach_res = $conn->query("SELECT * FROM users WHERE role IN ('teacher', 'principle') ORDER BY role DESC, name ASC");
+                                if ($teach_res && $teach_res->num_rows > 0) {
+                                    while ($tch = $teach_res->fetch_assoc()) {
+                                        echo "<tr>
+                                            <td>" . htmlspecialchars($tch['name']) . "</td>
+                                            <td>" . htmlspecialchars($tch['username']) . "</td>
+                                            <td>" . ucfirst(htmlspecialchars($tch['role'])) . "</td>
+                                            <td>";
+                                        if ($tch['role'] === 'teacher' || $tch['role'] === 'principle') {
+                                            echo "<button class='btn-secondary manage-student-btn' data-username='" . htmlspecialchars($tch['username']) . "'>Manage Data</button> ";
+                                        }
+                                        echo "<button class='btn-secondary edit-user-btn' data-id='" . $tch['id'] . "'>Edit</button>";
+                                        echo "</td>
+                                        </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='4'>No teachers or principles found.</td></tr>";
                                 }
                                 ?>
                             </tbody>
@@ -374,6 +432,43 @@ $students_count = $conn->query("SELECT COUNT(*) as c FROM users WHERE role='stud
                     <option value="inactive">Inactive</option>
                 </select>
                 <button type="submit" class="btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal" id="editUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editUserModalTitle">Edit User</h3>
+                <button class="modal-close" data-modal="editUserModal">&times;</button>
+            </div>
+            <form id="editUserForm" enctype="multipart/form-data">
+                <div style="padding: 25px; display: flex; flex-direction: column; gap: 15px;">
+                    <input type="hidden" name="userId" id="editUserId">
+
+                    <label for="editUserName">Full Name</label>
+                    <input type="text" name="name" id="editUserName" class="form-control" required>
+
+                    <label for="editUserUsername">Username</label>
+                    <input type="text" name="username" id="editUserUsername" class="form-control" required>
+
+                    <label for="editUserPassword">New Password (leave blank to keep current)</label>
+                    <input type="password" name="password" id="editUserPassword" class="form-control">
+
+                    <label for="editUserRole">Role</label>
+                    <select name="role" id="editUserRole" class="form-control" required>
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="principle">Principle</option>
+                    </select>
+
+                    <label for="editUserProfilePic">Profile Photo (leave blank to keep current)</label>
+                    <input type="file" name="profile_pic" id="editUserProfilePic" accept="image/*">
+                    <div id="currentUserProfilePic"></div>
+
+                    <button type="submit" class="btn-primary">Update User</button>
+                </div>
             </form>
         </div>
     </div>

@@ -17,8 +17,10 @@ if (preg_match('/^RCS[0-9]{7,}$/', $username)) {
     $role = 'student';
 } elseif (preg_match('/^RCT[0-9]{7,}$/', $username)) {
     $role = 'teacher';
+} elseif (preg_match('/^RCP[0-9]{7,}$/', $username)) {
+    $role = 'principle';
 } else {
-    die("Invalid username format. Please use RCS[ID] for students or RCT[ID] for teachers.");
+    die("Invalid username format. Use RCS[ID] for students, RCT[ID] for teachers, or RCP[ID] for principals.");
 }
 
 // Prepare query for user table
@@ -46,7 +48,9 @@ if ($user) {
         if ($user['role'] === 'student') {
             header("Location: dash.php"); // Student dashboard
         } elseif ($user['role'] === 'teacher') {
-            header("Location: dash.php"); // Teacher dashboard (can be different if needed)
+            header("Location: tdash.php"); // Teacher dashboard (can be different if needed)
+        } elseif ($user['role'] === 'principle') {
+            header("Location: pdash.php"); // Principle dashboard
         } else {
             header("Location: dash.php"); // Default dashboard
         }

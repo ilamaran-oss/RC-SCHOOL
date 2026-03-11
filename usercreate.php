@@ -26,6 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (!preg_match('/^RCT[0-9]{7,}$/', $username)) {
                 $pattern_error = "Teacher username must be: RCT[7+ digit ID].";
             }
+        } elseif ($role === "principle") {
+            if (!preg_match('/^RCP[0-9]{7,}$/', $username)) {
+                $pattern_error = "Principle username must be: RCP[7+ digit ID].";
+            }
         }
 
         if (!empty($pattern_error)) {
@@ -94,4 +98,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo json_encode(['success' => false, 'message' => 'Please fill in all fields.']);
     }
 }
-?>
